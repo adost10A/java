@@ -208,7 +208,7 @@ public class SparseMatrix<T>{
         rows++;
         for(int j=i+1;j<theRows.size();j++)
         {
-            theRows.get(i).inc_index();
+            theRows.get(j).inc_index();
         }
     }
 
@@ -222,9 +222,10 @@ public class SparseMatrix<T>{
     {
         theCols.add(i,new Head<T>(i));
         cols++;
+        Head<T> h;
         for(int j=i+1;j<theCols.size();j++)
         {
-            theCols.get(i).inc_index();
+            theCols.get(j).inc_index();
         }
 
     }
@@ -601,13 +602,8 @@ public class SparseMatrix<T>{
     {
         SparseMatrix<String> x = new SparseMatrix<String>(6,2,"-----");
         x.set(3,0,"X");
+        x.insertCol(0);
         System.out.println(x);
-        List<Triple<Integer,Integer,String>> l = x.allElements();
-        x.theCols.add(0,new Head<String>(0));
-
-
-
-
 
     }
 }
