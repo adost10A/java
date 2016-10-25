@@ -585,26 +585,31 @@ public class SparseMatrix<T> {
                 prev1 = x_1.nodes;
                 walk2 = y_1.nodes.right;
                 prev2 = y_1.nodes;
-                while (walk1 != null && walk2 != null) {
-                    if (walk1.cindex() > walk2.cindex()) {
-                        z.set(walk2.rindex(), walk2.cindex(), walk2.data + new_fill);
-                        prev2 = walk2;
-                        walk2 = walk2.right;
-                    } else if (walk1.cindex() < walk2.cindex()) {
-                        z.set(walk1.rindex(), walk1.cindex(), walk1.data + new_fill);
-                        prev1 = walk1;
-                        walk1 = walk1.right;
-                    }
-                    else if (walk1.cindex() == walk2.cindex()) {
-                        double check = walk1.data + walk2.data;
-                        if (check != new_fill)
+                while(true)
+                {
+                    if (!(walk1 != null && walk2 != null)) break;
+                    if(walk1.cindex()==walk2.cindex())
+                    {
+                        double combined = walk1.data + walk2.data;
+                        if(combined!=new_fill)
                         {
-                            z.set(walk1.rindex(), walk2.cindex(), check);
+                            z.set(walk1.rindex(),walk1.cindex(),combined);
                         }
-                        prev1 = walk1;
                         walk1 = walk1.right;
-                        prev2 = walk2;
                         walk2 = walk2.right;
+                    }
+                    else
+                    {
+                        if(walk1!=null)
+                        {
+                            z.set(walk1.rindex(),walk1.cindex(),walk1.data + y.fillElem);
+                            walk1 = walk1.right;
+                        }
+                        if(walk2!=null)
+                        {
+                            z.set(walk2.rindex(),walk2.cindex(),walk2.data + x.fillElem);
+                            walk2 = walk2.right;
+                        }
                     }
                 }
             }

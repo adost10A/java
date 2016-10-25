@@ -2482,7 +2482,7 @@ public class HW2FinalTests {
                        "";
        checkMatrix(expect,z);
    }
-    /*
+
   @Test(timeout=1000) public void add5(){
       String expect;
       SparseMatrix<Double> x = new SparseMatrix<Double>(4,3,0.0);
@@ -2702,274 +2702,275 @@ public class HW2FinalTests {
                       "";
       checkMatrix(expect,z);
   }
-  @Test(timeout=1000) public void add_fills_nonzero1(){
-      String expect;
-      SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,1.0);
-      SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,2.0);
-      SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
-      expect =                    // x
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 0\n"+
-                      "fillElement:  1.0\n"+
-                      "toString():\n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "";
-      checkMatrix(expect,x);
-      expect =                    // y
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 0\n"+
-                      "fillElement:  2.0\n"+
-                      "toString():\n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "";
-      checkMatrix(expect,y);
-      expect =                    // z
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 0\n"+
-                      "fillElement:  3.0\n"+
-                      "toString():\n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "";
-      checkMatrix(expect,z);
-  }
-  // Checks if summing to fill element avoids creating nodes
-  @Test(timeout=1000) public void add_fills_nonzero2(){
-      String expect;
-      SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,1.0);
-      SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,2.0);
-      x.set(1,1,2.0);
-      y.set(1,1,1.0);
-      SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
-      // adding should eliminate 3.0 - no elements
-      expect =                    // x
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 1\n"+
-                      "fillElement:  1.0\n"+
-                      "toString():\n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   2.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "";
-      checkMatrix(expect,x);
-      expect =                    // y
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 1\n"+
-                      "fillElement:  2.0\n"+
-                      "toString():\n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   1.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
-                      "";
-      checkMatrix(expect,y);
-      expect =                    // z
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 0\n"+
-                      "fillElement:  3.0\n"+
-                      "toString():\n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
-                      "";
-      checkMatrix(expect,z);
-  }
-  @Test(timeout=1000) public void add_stress1(){
-      String expect;
-      SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,0.0);
-      SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,0.0);
-      // x
-      x.set(1,2,1.0);
-      x.set(1,3,2.0);
-      x.set(1,5,3.0);
-      x.set(0,2,4.0);
-      x.set(0,6,5.0);
-      x.set(4,2,6.0);
-      x.set(4,6,7.0);
-      x.set(3,1,8.0);
-      x.set(3,2,9.0);
-      x.set(3,3,10.0);
-      x.set(3,4,11.0);
-      x.set(3,5,12.0);
-      x.set(3,6,13.0);
-      // y
-      y.set(1,0,1.0);
-      y.set(1,3,2.0);
-      y.set(0,5,3.0);
-      y.set(0,4,4.0);
-      y.set(0,1,5.0);
-      y.set(3,5,6.0);
-      y.set(4,1,8.0);
-      y.set(4,2,9.0);
-      y.set(4,3,10.0);
-      y.set(4,4,11.0);
-      y.set(4,5,12.0);
-      y.set(4,6,13.0);
-      SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
-      expect =                    // x
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 13\n"+
-                      "fillElement:  0.0\n"+
-                      "toString():\n"+
-                      "  0.0   0.0   4.0   0.0   0.0   0.0   5.0 \n"+
-                      "  0.0   0.0   1.0   2.0   0.0   3.0   0.0 \n"+
-                      "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
-                      "  0.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
-                      "  0.0   0.0   6.0   0.0   0.0   0.0   7.0 \n"+
-                      "";
-      checkMatrix(expect,x);
-      expect =                    // y
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 12\n"+
-                      "fillElement:  0.0\n"+
-                      "toString():\n"+
-                      "  0.0   5.0   0.0   0.0   4.0   3.0   0.0 \n"+
-                      "  1.0   0.0   0.0   2.0   0.0   0.0   0.0 \n"+
-                      "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
-                      "  0.0   0.0   0.0   0.0   0.0   6.0   0.0 \n"+
-                      "  0.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
-                      "";
-      checkMatrix(expect,y);
-      expect =                    // z
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 21\n"+
-                      "fillElement:  0.0\n"+
-                      "toString():\n"+
-                      "  0.0   5.0   4.0   0.0   4.0   3.0   5.0 \n"+
-                      "  1.0   0.0   1.0   4.0   0.0   3.0   0.0 \n"+
-                      "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
-                      "  0.0   8.0   9.0  10.0  11.0  18.0  13.0 \n"+
-                      "  0.0   8.0  15.0  10.0  11.0  12.0  20.0 \n"+
-                      "";
-      checkMatrix(expect,z);
-  }
-  @Test(timeout=1000) public void add_stress2(){
-      String expect;
-      SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,4.0);
-      SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,1.0);
-      // x
-      x.set(1,2,1.0);
-      x.set(1,3,2.0);
-      x.set(1,5,3.0);
-      x.set(0,2,-4.0);
-      x.set(0,6,5.0);
-      x.set(4,2,6.0);
-      x.set(4,6,7.0);
-      x.set(3,1,8.0);
-      x.set(3,2,9.0);
-      x.set(3,3,10.0);
-      x.set(3,4,11.0);
-      x.set(3,5,12.0);
-      x.set(3,6,13.0);
-      // y
-      y.set(1,0,-1.0);
-      y.set(1,3,2.0);
-      y.set(0,5,3.0);
-      y.set(0,4,4.0);
-      y.set(0,1,5.0);
-      y.set(3,5,6.0);
-      y.set(4,1,8.0);
-      y.set(4,2,9.0);
-      y.set(4,3,10.0);
-      y.set(4,4,11.0);
-      y.set(4,5,12.0);
-      y.set(4,6,13.0);
-      SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
-      expect =                    // x
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 13\n"+
-                      "fillElement:  4.0\n"+
-                      "toString():\n"+
-                      "  4.0   4.0  -4.0   4.0   4.0   4.0   5.0 \n"+
-                      "  4.0   4.0   1.0   2.0   4.0   3.0   4.0 \n"+
-                      "  4.0   4.0   4.0   4.0   4.0   4.0   4.0 \n"+
-                      "  4.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
-                      "  4.0   4.0   6.0   4.0   4.0   4.0   7.0 \n"+
-                      "";
-      checkMatrix(expect,x);
-      expect =                    // y
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 12\n"+
-                      "fillElement:  1.0\n"+
-                      "toString():\n"+
-                      "  1.0   5.0   1.0   1.0   4.0   3.0   1.0 \n"+
-                      " -1.0   1.0   1.0   2.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
-                      "  1.0   1.0   1.0   1.0   1.0   6.0   1.0 \n"+
-                      "  1.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
-                      "";
-      checkMatrix(expect,y);
-      expect =                    // z
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 21\n"+
-                      "fillElement:  5.0\n"+
-                      "toString():\n"+
-                      "  5.0   9.0  -3.0   5.0   8.0   7.0   6.0 \n"+
-                      "  3.0   5.0   2.0   4.0   5.0   4.0   5.0 \n"+
-                      "  5.0   5.0   5.0   5.0   5.0   5.0   5.0 \n"+
-                      "  5.0   9.0  10.0  11.0  12.0  18.0  14.0 \n"+
-                      "  5.0  12.0  15.0  14.0  15.0  16.0  20.0 \n"+
-                      "";
-      checkMatrix(expect,z);
-      SparseMatrix<Double> z2 = SparseMatrix.addFast(z,z);
-      expect =                    // z
-              "SparseMatrix\n"+
-                      "Rows:         5\n"+
-                      "Cols:         7\n"+
-                      "ElementCount: 21\n"+
-                      "fillElement:  10.0\n"+
-                      "toString():\n"+
-                      " 10.0  18.0  -6.0  10.0  16.0  14.0  12.0 \n"+
-                      "  6.0  10.0   4.0   8.0  10.0   8.0  10.0 \n"+
-                      " 10.0  10.0  10.0  10.0  10.0  10.0  10.0 \n"+
-                      " 10.0  18.0  20.0  22.0  24.0  36.0  28.0 \n"+
-                      " 10.0  24.0  30.0  28.0  30.0  32.0  40.0 \n"+
-                      "";
-      checkMatrix(expect,z2);
-  }
+    /*
+ @Test(timeout=1000) public void add_fills_nonzero1(){
+     String expect;
+     SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,1.0);
+     SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,2.0);
+     SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
+     expect =                    // x
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 0\n"+
+                     "fillElement:  1.0\n"+
+                     "toString():\n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "";
+     checkMatrix(expect,x);
+     expect =                    // y
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 0\n"+
+                     "fillElement:  2.0\n"+
+                     "toString():\n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "";
+     checkMatrix(expect,y);
+     expect =                    // z
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 0\n"+
+                     "fillElement:  3.0\n"+
+                     "toString():\n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "";
+     checkMatrix(expect,z);
+ }
+ // Checks if summing to fill element avoids creating nodes
+ @Test(timeout=1000) public void add_fills_nonzero2(){
+     String expect;
+     SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,1.0);
+     SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,2.0);
+     x.set(1,1,2.0);
+     y.set(1,1,1.0);
+     SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
+     // adding should eliminate 3.0 - no elements
+     expect =                    // x
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 1\n"+
+                     "fillElement:  1.0\n"+
+                     "toString():\n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   2.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "";
+     checkMatrix(expect,x);
+     expect =                    // y
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 1\n"+
+                     "fillElement:  2.0\n"+
+                     "toString():\n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   1.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "  2.0   2.0   2.0   2.0   2.0   2.0   2.0 \n"+
+                     "";
+     checkMatrix(expect,y);
+     expect =                    // z
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 0\n"+
+                     "fillElement:  3.0\n"+
+                     "toString():\n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "  3.0   3.0   3.0   3.0   3.0   3.0   3.0 \n"+
+                     "";
+     checkMatrix(expect,z);
+ }
+ @Test(timeout=1000) public void add_stress1(){
+     String expect;
+     SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,0.0);
+     SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,0.0);
+     // x
+     x.set(1,2,1.0);
+     x.set(1,3,2.0);
+     x.set(1,5,3.0);
+     x.set(0,2,4.0);
+     x.set(0,6,5.0);
+     x.set(4,2,6.0);
+     x.set(4,6,7.0);
+     x.set(3,1,8.0);
+     x.set(3,2,9.0);
+     x.set(3,3,10.0);
+     x.set(3,4,11.0);
+     x.set(3,5,12.0);
+     x.set(3,6,13.0);
+     // y
+     y.set(1,0,1.0);
+     y.set(1,3,2.0);
+     y.set(0,5,3.0);
+     y.set(0,4,4.0);
+     y.set(0,1,5.0);
+     y.set(3,5,6.0);
+     y.set(4,1,8.0);
+     y.set(4,2,9.0);
+     y.set(4,3,10.0);
+     y.set(4,4,11.0);
+     y.set(4,5,12.0);
+     y.set(4,6,13.0);
+     SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
+     expect =                    // x
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 13\n"+
+                     "fillElement:  0.0\n"+
+                     "toString():\n"+
+                     "  0.0   0.0   4.0   0.0   0.0   0.0   5.0 \n"+
+                     "  0.0   0.0   1.0   2.0   0.0   3.0   0.0 \n"+
+                     "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
+                     "  0.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
+                     "  0.0   0.0   6.0   0.0   0.0   0.0   7.0 \n"+
+                     "";
+     checkMatrix(expect,x);
+     expect =                    // y
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 12\n"+
+                     "fillElement:  0.0\n"+
+                     "toString():\n"+
+                     "  0.0   5.0   0.0   0.0   4.0   3.0   0.0 \n"+
+                     "  1.0   0.0   0.0   2.0   0.0   0.0   0.0 \n"+
+                     "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
+                     "  0.0   0.0   0.0   0.0   0.0   6.0   0.0 \n"+
+                     "  0.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
+                     "";
+     checkMatrix(expect,y);
+     expect =                    // z
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 21\n"+
+                     "fillElement:  0.0\n"+
+                     "toString():\n"+
+                     "  0.0   5.0   4.0   0.0   4.0   3.0   5.0 \n"+
+                     "  1.0   0.0   1.0   4.0   0.0   3.0   0.0 \n"+
+                     "  0.0   0.0   0.0   0.0   0.0   0.0   0.0 \n"+
+                     "  0.0   8.0   9.0  10.0  11.0  18.0  13.0 \n"+
+                     "  0.0   8.0  15.0  10.0  11.0  12.0  20.0 \n"+
+                     "";
+     checkMatrix(expect,z);
+ }
+ @Test(timeout=1000) public void add_stress2(){
+     String expect;
+     SparseMatrix<Double> x = new SparseMatrix<Double>(5,7,4.0);
+     SparseMatrix<Double> y = new SparseMatrix<Double>(5,7,1.0);
+     // x
+     x.set(1,2,1.0);
+     x.set(1,3,2.0);
+     x.set(1,5,3.0);
+     x.set(0,2,-4.0);
+     x.set(0,6,5.0);
+     x.set(4,2,6.0);
+     x.set(4,6,7.0);
+     x.set(3,1,8.0);
+     x.set(3,2,9.0);
+     x.set(3,3,10.0);
+     x.set(3,4,11.0);
+     x.set(3,5,12.0);
+     x.set(3,6,13.0);
+     // y
+     y.set(1,0,-1.0);
+     y.set(1,3,2.0);
+     y.set(0,5,3.0);
+     y.set(0,4,4.0);
+     y.set(0,1,5.0);
+     y.set(3,5,6.0);
+     y.set(4,1,8.0);
+     y.set(4,2,9.0);
+     y.set(4,3,10.0);
+     y.set(4,4,11.0);
+     y.set(4,5,12.0);
+     y.set(4,6,13.0);
+     SparseMatrix<Double> z = SparseMatrix.addFast(x,y);
+     expect =                    // x
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 13\n"+
+                     "fillElement:  4.0\n"+
+                     "toString():\n"+
+                     "  4.0   4.0  -4.0   4.0   4.0   4.0   5.0 \n"+
+                     "  4.0   4.0   1.0   2.0   4.0   3.0   4.0 \n"+
+                     "  4.0   4.0   4.0   4.0   4.0   4.0   4.0 \n"+
+                     "  4.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
+                     "  4.0   4.0   6.0   4.0   4.0   4.0   7.0 \n"+
+                     "";
+     checkMatrix(expect,x);
+     expect =                    // y
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 12\n"+
+                     "fillElement:  1.0\n"+
+                     "toString():\n"+
+                     "  1.0   5.0   1.0   1.0   4.0   3.0   1.0 \n"+
+                     " -1.0   1.0   1.0   2.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   1.0   1.0 \n"+
+                     "  1.0   1.0   1.0   1.0   1.0   6.0   1.0 \n"+
+                     "  1.0   8.0   9.0  10.0  11.0  12.0  13.0 \n"+
+                     "";
+     checkMatrix(expect,y);
+     expect =                    // z
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 21\n"+
+                     "fillElement:  5.0\n"+
+                     "toString():\n"+
+                     "  5.0   9.0  -3.0   5.0   8.0   7.0   6.0 \n"+
+                     "  3.0   5.0   2.0   4.0   5.0   4.0   5.0 \n"+
+                     "  5.0   5.0   5.0   5.0   5.0   5.0   5.0 \n"+
+                     "  5.0   9.0  10.0  11.0  12.0  18.0  14.0 \n"+
+                     "  5.0  12.0  15.0  14.0  15.0  16.0  20.0 \n"+
+                     "";
+     checkMatrix(expect,z);
+     SparseMatrix<Double> z2 = SparseMatrix.addFast(z,z);
+     expect =                    // z
+             "SparseMatrix\n"+
+                     "Rows:         5\n"+
+                     "Cols:         7\n"+
+                     "ElementCount: 21\n"+
+                     "fillElement:  10.0\n"+
+                     "toString():\n"+
+                     " 10.0  18.0  -6.0  10.0  16.0  14.0  12.0 \n"+
+                     "  6.0  10.0   4.0   8.0  10.0   8.0  10.0 \n"+
+                     " 10.0  10.0  10.0  10.0  10.0  10.0  10.0 \n"+
+                     " 10.0  18.0  20.0  22.0  24.0  36.0  28.0 \n"+
+                     " 10.0  24.0  30.0  28.0  30.0  32.0  40.0 \n"+
+                     "";
+     checkMatrix(expect,z2);
+ }
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // Utility functions and classes
+ ////////////////////////////////////////////////////////////////////////////////
+ // Utility functions and classes
 */
     // simple pair function
     static class Pair<F,S>{
