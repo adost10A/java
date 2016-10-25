@@ -318,10 +318,8 @@ public class SparseMatrix<T>{
         Head<T> col_modify = theCols.get(j);
         Node<T> walk_node;
         Node<T> prev;
-        /* Assign a node to i,j */
-        /* Assign the row first */
-
-        if(get(i,j)!=fillElem) //If it exists already
+        /* If the node already exists just replace it */
+        if(!get(i,j).equals(fillElem))
         {
             walk_node = row_modify.nodes.right;
             while(walk_node.cindex()!=j)
@@ -329,93 +327,77 @@ public class SparseMatrix<T>{
                 walk_node = walk_node.right;
             }
             walk_node.data = x;
-            walk_node = col_modify.nodes.down;
-            while(walk_node.rindex()!=i)
-            {
-                walk_node = walk_node.down;
-            }
-            walk_node.data = x;
             return;
         }
-        if(row_modify.nodes == null) //if Row is 0
+        /* if the row is empty */
+        if(row_modify.nodes==null)
         {
             row_modify.nodes = new Node<T>();
-            insert_node.right = null;
             row_modify.nodes.right = insert_node;
-            row_modify.int_element();
-            element_count++;
         }
         else
         {
-            walk_node = row_modify.nodes.right; // Assign walk node to the nodes
+            /* If Not Empty*/
+            walk_node = row_modify.nodes.right;
             prev = row_modify.nodes;
-            while(walk_node.cindex()<=j && walk_node.right!=null)
+            while(j>walk_node.cindex() && walk_node!=null)
             {
                 prev = walk_node;
                 walk_node = walk_node.right;
-
+                if(walk_node==null)
+                {
+                    break;
+                }
             }
-            if(walk_node.cindex()==j)
+            /*
+            Case 1: Walk is Null so insert it at prev and assign the right of insert to null
+            Case 2: it is inserted in between with no issues
+            */
+            if(walk_node==null)
             {
-                walk_node.data = x;
+                prev.right = insert_node;
+                insert_node.right = walk_node;
             }
             else
             {
-                /* Insert before */
-                if(insert_node.cindex()<walk_node.cindex())
-                {
-                    insert_node.right = walk_node;
-                    prev.right = insert_node;
-                }
-                /* Insert after */
-                else
-                {
-                    insert_node.right = walk_node.right;
-                    walk_node.right = insert_node;
-                }
-                row_modify.int_element();
-                element_count++;
+                prev.right = insert_node;
+                insert_node.right = walk_node;
             }
         }
-        if(col_modify.nodes == null)
+        /* if the col is empty */
+        if(col_modify.nodes==null)
         {
             col_modify.nodes = new Node<T>();
-            insert_node.down = null;
             col_modify.nodes.down = insert_node;
-            col_modify.int_element();
-
+            element_count++;
         }
         else
         {
             walk_node = col_modify.nodes.down;
             prev = col_modify.nodes;
-            while(walk_node.rindex()<=i && walk_node.down!=null)
+            while(i>walk_node.rindex() && walk_node!=null)
             {
                 prev = walk_node;
                 walk_node = walk_node.down;
-
+                if(walk_node==null)
+                {
+                    break;
+                }
             }
-            if(walk_node.rindex()==i)
+            if(walk_node==null) //j will be put in last
             {
-                walk_node.data =x;
+                prev.down = insert_node;
+                insert_node.down = walk_node;
+                element_count++;
             }
             else
             {
-                if(insert_node.rindex()<walk_node.rindex())
-                {
-                    prev.right = insert_node;
-                    insert_node.right = walk_node;
-                }
-                else
-                {
-                    insert_node.down = walk_node.down;
-                    walk_node.down = insert_node;
-                }
-
-                col_modify.int_element();
+                prev.down = insert_node;
+                insert_node.down = walk_node;
+                element_count++;
             }
         }
-        /* DEBUG | Check if it was actually added */
+        /* Insert the modified head nodes back into the rows/cols */
         theRows.set(i,row_modify);
         theCols.set(j,col_modify);
     }
@@ -600,10 +582,14 @@ public class SparseMatrix<T>{
 */
     public static void main(String args[])
     {
-        SparseMatrix<String> x = new SparseMatrix<String>(6,2,"-----");
-        x.set(3,0,"X");
-        x.insertCol(0);
-        System.out.println(x);
-
+        SparseMatrix<Integer> x = new SparseMatrix<Integer>(1,1,0);
+        x.set(1,0,11);
+        x.set(2,0,22);
+        x.setToFill(2,0);
+        x.set(2,0,33);
+        System.out.println(x);/*
+        x.setToFill(1,0);
+        x.set(0,0,44);
+        */
     }
 }
