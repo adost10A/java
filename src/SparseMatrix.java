@@ -159,6 +159,9 @@ public class SparseMatrix<T>{
     // Target Complexity: O(1)
     public int rows(){return rows;}
 
+    public Head<T> getRow(int i){return theRows.get(i);}
+
+    public Head<T> getCol(int i){return theCols.get(i);}
 
     // Return the number of cols in the Matrix which is the last indexed
     // col+1.
@@ -576,20 +579,65 @@ public class SparseMatrix<T>{
     // Memory constraint: O(1)
     //   The memory constraint does not count the size of x, y, or the
     //   result matrix which is returned.
-    /*
-    public static SparseMatrix<Double> addFast(SparseMatrix<Double> x, SparseMatrix<Double> y);
+    public static SparseMatrix<Double> addFast(SparseMatrix<Double> x, SparseMatrix<Double> y)
+    {
+        if(x.rows()!=y.rows() || x.cols()!=y.cols())
+        {
+            throw new IllegalArgumentException("The Matricies MUST be equal");
+        }
+        if(x.elementCount()==0)
+        {
+            return x;
+        }
+        SparseMatrix <Double> z = new SparseMatrix<Double>(x.getFillElem());
+        Head<Double> x_1,y_1;
+        Node<Double> walk1,prev1;
+        Node<Double> walk2,prev2;
+        for(int r = 0;r<x.rows();r++)
+        {
+            x_1 = x.getRow(r);
+            y_1 = y.getRow(r);
+            /*
+            Case 1: X IS NOT EMPTY and Y IS EMPTY
+            Case 2: X is EMPTY and Y IS NOT EMPTY
+            Case 3: Both are empty and that should be added to z
+             */
+            if (x_1.nodes != null && y_1.nodes == null)
+            {
+                walk1 = x_1.nodes.right;
+                prev1 = x_1.nodes;
+                while (walk1 != null)
+                {
+                    walk1.data += x.fillElem;
+                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
+                    walk1 = walk1.right;
+                }
+            }
+            else if(y_1.nodes != null && x_1.nodes == null)
+            {
+                walk1 = y_1.nodes.right;
+                prev1 = y_1.nodes;
+                while (walk1 != null)
+                {
+                    walk1.data += x.fillElem;
+                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
+                    walk1 = walk1.right;
+                }
+            }
+        }
+        return z;
+    }
 
-*/
+
     public static void main(String args[])
     {
-        SparseMatrix<Integer> x = new SparseMatrix<Integer>(1,1,0);
-        x.set(1,0,11);
-        x.set(2,0,22);
-        x.setToFill(2,0);
-        x.set(2,0,33);
-        System.out.println(x);/*
-        x.setToFill(1,0);
-        x.set(0,0,44);
-        */
+        SparseMatrix <Double> x = new SparseMatrix<Double>(3,3,9.0);
+        SparseMatrix <Double> y = new SparseMatrix<Double>(3,3,9.0);
+        SparseMatrix <Double> z = x.addFast(x,y);
+        System.out.println(z);
+
+
+
+
     }
 }
