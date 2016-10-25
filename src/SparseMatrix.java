@@ -1,6 +1,3 @@
-
-import javafx.beans.binding.DoubleExpression;
-
 import java.util.*;
 
 /**
@@ -89,16 +86,14 @@ public class SparseMatrix<T> {
 
 
         public String toString() {
-            StringBuilder s1 = new StringBuilder();
-            s1.append(data);
-            return s1.toString();
+            return String.valueOf(data);
         }
 
         public String debugtoString() {
             StringBuilder b1 = new StringBuilder();
-            b1.append("Data: " + data);
-            b1.append("\nRow: " + rowHead.index);
-            b1.append("\nCol: " + colHead.index);
+            b1.append("Data: ").append(data);
+            b1.append("\nRow: ").append(rowHead.index);
+            b1.append("\nCol: ").append(colHead.index);
             return b1.toString();
         }
 
@@ -230,7 +225,6 @@ public class SparseMatrix<T> {
     public void insertCol(int i) {
         theCols.add(i, new Head<T>(i));
         cols++;
-        Head<T> h;
         for (int j = i + 1; j < theCols.size(); j++) {
             theCols.get(j).inc_index();
         }
@@ -420,6 +414,7 @@ public class SparseMatrix<T> {
             prev = curr;
             curr = curr.right;
         }
+
     }
 
     /*
@@ -598,6 +593,7 @@ public class SparseMatrix<T> {
                         walk1 = walk1.right;
                         walk2 = walk2.right;
                     }
+
                     else
                     {
                         if(walk1!=null)
