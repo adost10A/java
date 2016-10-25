@@ -1,4 +1,6 @@
 
+import javafx.beans.binding.DoubleExpression;
+
 import java.util.*;
 
 /**
@@ -13,12 +15,13 @@ import java.util.*;
 //   E: number of non-fill elements in the matrix
 //   R: number of rows in the matrix
 //   C: number of cols in the matrix
-public class SparseMatrix<T>{
+public class SparseMatrix<T> {
     protected int rows;
     protected int cols;
     protected int element_count;
     protected T fillElem;
-    protected List<Head<T>> theRows,theCols;
+    protected List<Head<T>> theRows, theCols;
+
     // Suggested internal class to represent Row and Column
     // Headers. Tracks indices of the col or row, pointer to the start
     // of row/column. This is a separate class from Node to enable
@@ -32,16 +35,20 @@ public class SparseMatrix<T>{
         public Node<X> nodes;         // Dummy node at start of row/column; add data nodes after the dummy
 
         public int element_count;
+
         public Head(int i)           // Constructor for a new Head of a node list, i is the row or column number for this Head
         {
             this.index = i;
 
         }
-        public void inc_index()
-        {
+
+        public void inc_index() {
             index++;
         }
-        public void int_element(){element_count++;}
+
+        public void int_element() {
+            element_count++;
+        }
 
 
     }
@@ -50,7 +57,7 @@ public class SparseMatrix<T>{
     // nodes to the right and down. Also contains links to the row and
     // col Heads which store its row# and col#.  You may modify this
     // class as you see fit.
-    protected static class Node<Y>{
+    protected static class Node<Y> {
 
         public Head<Y> rowHead;     // My row head
 
@@ -63,39 +70,37 @@ public class SparseMatrix<T>{
         public Y data;              // Data associated with the node
 
         Node<Y> next;
-        public Node(Y data)
-        {
+
+        public Node(Y data) {
             this.data = data;
         }
-        public Node()
-        {
+
+        public Node() {
             data = null;
         }
-        public int rindex()
-        {
+
+        public int rindex() {
             return rowHead.index;
         }
-        public int cindex()
-        {
+
+        public int cindex() {
             return colHead.index;
         }
 
 
-        public String toString()
-        {
+        public String toString() {
             StringBuilder s1 = new StringBuilder();
             s1.append(data);
             return s1.toString();
         }
-        public String debugtoString()
-        {
+
+        public String debugtoString() {
             StringBuilder b1 = new StringBuilder();
             b1.append("Data: " + data);
             b1.append("\nRow: " + rowHead.index);
             b1.append("\nCol: " + colHead.index);
             return b1.toString();
         }
-
 
 
     }
@@ -108,31 +113,27 @@ public class SparseMatrix<T>{
     //   R: number of rows in the matrix
     //   C: number of cols in the matrix
 
-    public SparseMatrix(int r, int c, T fillElem)
-    {
+    public SparseMatrix(int r, int c, T fillElem) {
         rows = r;
         cols = c;
         theRows = new ArrayList<Head<T>>();
         theCols = new ArrayList<Head<T>>();
         this.fillElem = fillElem;
-        for(int i =0;i<rows;i++)
-        {
+        for (int i = 0; i < rows; i++) {
             theRows.add(new Head<T>(i));
         }
 
-        for(int i=0;i<cols;i++)
-        {
+        for (int i = 0; i < cols; i++) {
             theCols.add(new Head<T>(i));
         }
-        element_count =0;
+        element_count = 0;
 
 
     }
 
     // Constructor to create a 0 by 0 SparseMatrix with the given
     // fillElem
-    public SparseMatrix(T fillElem)
-    {
+    public SparseMatrix(T fillElem) {
         rows = 0;
         cols = 0;
         theRows = new ArrayList<Head<T>>();
@@ -148,8 +149,7 @@ public class SparseMatrix<T>{
     //
     // Target Complexity: O(1)
 
-    public int elementCount()
-    {
+    public int elementCount() {
         return element_count;
     }
 
@@ -157,30 +157,39 @@ public class SparseMatrix<T>{
     // row+1.
     //
     // Target Complexity: O(1)
-    public int rows(){return rows;}
+    public int rows() {
+        return rows;
+    }
 
-    public Head<T> getRow(int i){return theRows.get(i);}
+    public Head<T> getRow(int i) {
+        return theRows.get(i);
+    }
 
-    public Head<T> getCol(int i){return theCols.get(i);}
+    public Head<T> getCol(int i) {
+        return theCols.get(i);
+    }
 
     // Return the number of cols in the Matrix which is the last indexed
     // col+1.
     //
     // Target Complexity: O(1)
-    public int cols(){return cols;}
+    public int cols() {
+        return cols;
+    }
 
     // Return the fill element with which this matrix was initialized
     //
     // Target Complexity: O(1)
 
-    public T getFillElem(){return this.fillElem;}
+    public T getFillElem() {
+        return this.fillElem;
+    }
 
     // Add an empty row on to the bottom of the matrix.
     //
     // Target Complexity: O(1) amortized
 
-    public void addRow()
-    {
+    public void addRow() {
         this.theRows.add(new Head<T>(rows));
         rows++;
     }
@@ -188,8 +197,7 @@ public class SparseMatrix<T>{
     // Add an empty col on right side of the matrix.
     //
     // Target Complexity: O(1) amortized
-    public void addCol()
-    {
+    public void addCol() {
         this.theCols.add(new Head<T>(cols));
         cols++;
     }
@@ -201,16 +209,14 @@ public class SparseMatrix<T>{
     // Target Complexity: O(R)
     //   R: number of rows in the matrix
 
-    public void insertRow(int i)
-    {
+    public void insertRow(int i) {
 
-        theRows.add(i,new Head<T>(i));
+        theRows.add(i, new Head<T>(i));
         /*
         Update the row value from all rows shifted down
          */
         rows++;
-        for(int j=i+1;j<theRows.size();j++)
-        {
+        for (int j = i + 1; j < theRows.size(); j++) {
             theRows.get(j).inc_index();
         }
     }
@@ -221,13 +227,11 @@ public class SparseMatrix<T>{
     //
     // Target Complexity: O(C)
     //   C: number of cols in the matrix
-    public void insertCol(int i)
-    {
-        theCols.add(i,new Head<T>(i));
+    public void insertCol(int i) {
+        theCols.add(i, new Head<T>(i));
         cols++;
         Head<T> h;
-        for(int j=i+1;j<theCols.size();j++)
-        {
+        for (int j = i + 1; j < theCols.size(); j++) {
             theCols.get(j).inc_index();
         }
 
@@ -243,29 +247,25 @@ public class SparseMatrix<T>{
     // Target Complexity: O(E)
     //   E: number of non-fill elements in the matrix
 
-    public T get(int i, int j)
-    {
+    public T get(int i, int j) {
 
-        if(i>this.rows()-1 || j>this.cols()-1)
-        {
+        if (i > this.rows() - 1 || j > this.cols() - 1) {
             throw new IndexOutOfBoundsException("One of your variables was outside of the matrix");
         }
         Head<T> rowhead = theRows.get(i);
-        if(rowhead.nodes==null)
-        {
+        if (rowhead.nodes == null) {
             return fillElem;
         }
         Node<T> rownode = rowhead.nodes.right;
-        while(rownode.cindex()!=j && rownode!=null)
-        {
+        while (rownode.cindex() != j && rownode != null) {
             rownode = rownode.right;
-            if(rownode==null)
-            {
+            if (rownode == null) {
                 return fillElem;
             }
         }
         return rownode.data;
     }
+
     /*
     // Set element at position (i,j) to be x.
     //
@@ -295,20 +295,17 @@ public class SparseMatrix<T>{
         if (i < 0 || j < 0) {
             throw new IllegalArgumentException("The value put in set was negative.");
         }
-        if(x==fillElem)
-        {
+        if (x == fillElem) {
             throw new IllegalArgumentException("Cannot Assign Fill Element to Sparse Matrix");
         }
         //If there's not enough rows/cols to set add more
         /* Make the following rows | i - theRows.size() = How many to make | 1 - (1-1) = 1 | make 1 row */
-        int make_row = i-(theRows.size()-1);
-        int make_col = j-(theCols.size()-1);
-        for(int m=0;m<make_row;m++)
-        {
+        int make_row = i - (theRows.size() - 1);
+        int make_col = j - (theCols.size() - 1);
+        for (int m = 0; m < make_row; m++) {
             addRow();
         }
-        for(int n=0;n<make_col;n++)
-        {
+        for (int n = 0; n < make_col; n++) {
             addCol();
         }
 
@@ -322,33 +319,26 @@ public class SparseMatrix<T>{
         Node<T> walk_node;
         Node<T> prev;
         /* If the node already exists just replace it */
-        if(!get(i,j).equals(fillElem))
-        {
+        if (!get(i, j).equals(fillElem)) {
             walk_node = row_modify.nodes.right;
-            while(walk_node.cindex()!=j)
-            {
+            while (walk_node.cindex() != j) {
                 walk_node = walk_node.right;
             }
             walk_node.data = x;
             return;
         }
         /* if the row is empty */
-        if(row_modify.nodes==null)
-        {
+        if (row_modify.nodes == null) {
             row_modify.nodes = new Node<T>();
             row_modify.nodes.right = insert_node;
-        }
-        else
-        {
+        } else {
             /* If Not Empty*/
             walk_node = row_modify.nodes.right;
             prev = row_modify.nodes;
-            while(j>walk_node.cindex() && walk_node!=null)
-            {
+            while (j > walk_node.cindex() && walk_node != null) {
                 prev = walk_node;
                 walk_node = walk_node.right;
-                if(walk_node==null)
-                {
+                if (walk_node == null) {
                     break;
                 }
             }
@@ -356,53 +346,43 @@ public class SparseMatrix<T>{
             Case 1: Walk is Null so insert it at prev and assign the right of insert to null
             Case 2: it is inserted in between with no issues
             */
-            if(walk_node==null)
-            {
+            if (walk_node == null) {
                 prev.right = insert_node;
                 insert_node.right = walk_node;
-            }
-            else
-            {
+            } else {
                 prev.right = insert_node;
                 insert_node.right = walk_node;
             }
         }
         /* if the col is empty */
-        if(col_modify.nodes==null)
-        {
+        if (col_modify.nodes == null) {
             col_modify.nodes = new Node<T>();
             col_modify.nodes.down = insert_node;
             element_count++;
-        }
-        else
-        {
+        } else {
             walk_node = col_modify.nodes.down;
             prev = col_modify.nodes;
-            while(i>walk_node.rindex() && walk_node!=null)
-            {
+            while (i > walk_node.rindex() && walk_node != null) {
                 prev = walk_node;
                 walk_node = walk_node.down;
-                if(walk_node==null)
-                {
+                if (walk_node == null) {
                     break;
                 }
             }
-            if(walk_node==null) //j will be put in last
+            if (walk_node == null) //j will be put in last
             {
                 prev.down = insert_node;
                 insert_node.down = walk_node;
                 element_count++;
-            }
-            else
-            {
+            } else {
                 prev.down = insert_node;
                 insert_node.down = walk_node;
                 element_count++;
             }
         }
         /* Insert the modified head nodes back into the rows/cols */
-        theRows.set(i,row_modify);
-        theCols.set(j,col_modify);
+        theRows.set(i, row_modify);
+        theCols.set(j, col_modify);
     }
 
 
@@ -416,26 +396,22 @@ public class SparseMatrix<T>{
     // Target Complexity: O(E)
     //   E: number of non-fill elements in the matrix
 
-    public void setToFill(int i, int j)
-    {
-        if(i>theRows.size() || j>theCols.size())
-        {
+    public void setToFill(int i, int j) {
+        if (i > theRows.size() || j > theCols.size()) {
             throw new IndexOutOfBoundsException("I or J was out of bounds");
         }
         Head<T> row = theRows.get(i);
         Head<T> col = theCols.get(j);
-        Node<T> curr,prev;
+        Node<T> curr, prev;
         curr = row.nodes.right;
         prev = row.nodes;
 
         /*
         Get The Head and the Node of the Row/Col to be modified
         */
-        while(curr!=null)
-        {
+        while (curr != null) {
             //Break if we hit the end OR we match the col index with what's requested
-            if(curr.cindex()==j)
-            {
+            if (curr.cindex() == j) {
                 prev.right = curr.right;
                 curr = null;
                 element_count--;
@@ -445,6 +421,7 @@ public class SparseMatrix<T>{
             curr = curr.right;
         }
     }
+
     /*
 
 
@@ -473,46 +450,37 @@ public class SparseMatrix<T>{
     // Note: repeated calls to get(i,j) will not adhere to this
     // complexity
 */
-    public String toString()
-    {
+    public String toString() {
         StringBuilder str = new StringBuilder();
         //Loop over each head in the row
-        for(int row =0;row<theRows.size();row++)
-        {
+        for (int row = 0; row < theRows.size(); row++) {
 
             Head<T> head = theRows.get(row);
-            if(head.nodes==null)
-            {
+            if (head.nodes == null) {
                 //If there are no nodes intitalized then autofill with fillElem
-                for(int fill=0;fill<theCols.size();fill++)
-                {
+                for (int fill = 0; fill < theCols.size(); fill++) {
                     //str.append(fillElem + " ");
-                    str.append(String.format("%5s ",fillElem));
+                    str.append(String.format("%5s ", fillElem));
                 }
                 str.append("\n");
-            }
-            else
-            {
+            } else {
                 Node<T> n = head.nodes.right;
-                int k=0;
+                int k = 0;
                 //Increment until it reaches the end of the nodes
-                while(n!=null)
-                {
-                    for(;k<n.colHead.index;k++)
-                    {
+                while (n != null) {
+                    for (; k < n.colHead.index; k++) {
                         //str.append(fillElem + " ");
-                        str.append(String.format("%5s ",fillElem));
+                        str.append(String.format("%5s ", fillElem));
                     }
                     //str.append(n.data + " ");
-                    str.append(String.format("%5s ",n.data));
+                    str.append(String.format("%5s ", n.data));
                     k = n.colHead.index + 1;
                     n = n.right;
                 }
                 //If there are remaining spaces fill them with fillElem
-                while(k<theCols.size())
-                {
+                while (k < theCols.size()) {
                     //str.append(fillElem + " ");
-                    str.append(String.format("%5s ",fillElem));
+                    str.append(String.format("%5s ", fillElem));
                     k++;
                 }
                 str.append("\n");
@@ -522,14 +490,12 @@ public class SparseMatrix<T>{
     }
 
 
-
     // Required but may simply return "".  This method will be called
     // and the string it produces will be reported when tests fail to
     // aid in viewing the internal state of the SparseMatrix for
     // debugging.
 
-    public String debugString()
-    {
+    public String debugString() {
         return "";
     }
 
@@ -541,20 +507,16 @@ public class SparseMatrix<T>{
     //   E: number of non-fill elements in the matrix
     // Note: repeated calls to get(i,j) will not adhere to this
     // complexity
-    public List<Triple<Integer,Integer,T>> allElements()
-    {
-        List<Triple<Integer,Integer,T>> list = new ArrayList<>();
+    public List<Triple<Integer, Integer, T>> allElements() {
+        List<Triple<Integer, Integer, T>> list = new ArrayList<>();
         Head<T> row;
         Node<T> walk;
-        for(int r=0;r<theRows.size();r++)
-        {
+        for (int r = 0; r < theRows.size(); r++) {
             row = theRows.get(r);
-            if(row.nodes!=null)
-            {
+            if (row.nodes != null) {
                 walk = row.nodes.right;
-                while(walk!=null)
-                {
-                    list.add(new Triple(walk.rindex(),walk.cindex(),walk.data));
+                while (walk != null) {
+                    list.add(new Triple(walk.rindex(), walk.cindex(), walk.data));
                     walk = walk.right;
                 }
             }
@@ -579,22 +541,20 @@ public class SparseMatrix<T>{
     // Memory constraint: O(1)
     //   The memory constraint does not count the size of x, y, or the
     //   result matrix which is returned.
-    public static SparseMatrix<Double> addFast(SparseMatrix<Double> x, SparseMatrix<Double> y)
-    {
-        if(x.rows()!=y.rows() || x.cols()!=y.cols())
-        {
+    public static SparseMatrix<Double> addFast(SparseMatrix<Double> x, SparseMatrix<Double> y) {
+        if (x.rows() != y.rows() || x.cols() != y.cols()) {
             throw new IllegalArgumentException("The Matricies MUST be equal");
         }
-        if(x.elementCount()==0)
-        {
+        if (x.elementCount() == 0) {
             return x;
         }
-        SparseMatrix <Double> z = new SparseMatrix<Double>(x.getFillElem());
-        Head<Double> x_1,y_1;
-        Node<Double> walk1,prev1;
-        Node<Double> walk2,prev2;
-        for(int r = 0;r<x.rows();r++)
-        {
+        double new_fill = x.getFillElem() + y.getFillElem();
+        SparseMatrix<Double> z = new SparseMatrix<Double>(x.rows(), y.cols(), new_fill);
+        Head<Double> x_1, y_1;
+        Node<Double> walk1, prev1;
+        Node<Double> walk2, prev2;
+
+        for (int r = 0; r < x.rows(); r++) {
             x_1 = x.getRow(r);
             y_1 = y.getRow(r);
             /*
@@ -602,26 +562,50 @@ public class SparseMatrix<T>{
             Case 2: X is EMPTY and Y IS NOT EMPTY
             Case 3: Both are empty and that should be added to z
              */
-            if (x_1.nodes != null && y_1.nodes == null)
-            {
+            if ((x_1.nodes != null) && (y_1.nodes == null)) {
                 walk1 = x_1.nodes.right;
                 prev1 = x_1.nodes;
-                while (walk1 != null)
-                {
+                while (walk1 != null) {
+                    walk1.data += z.fillElem;
+                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
+                    walk1 = walk1.right;
+                }
+            } else if ((y_1.nodes != null) && (x_1.nodes == null)) {
+                walk1 = y_1.nodes.right;
+                prev1 = y_1.nodes;
+                while (walk1 != null) {
                     walk1.data += x.fillElem;
                     z.set(walk1.rindex(), walk1.cindex(), walk1.data);
                     walk1 = walk1.right;
                 }
-            }
-            else if(y_1.nodes != null && x_1.nodes == null)
-            {
-                walk1 = y_1.nodes.right;
-                prev1 = y_1.nodes;
-                while (walk1 != null)
-                {
-                    walk1.data += x.fillElem;
-                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
-                    walk1 = walk1.right;
+            } else if ((x_1.nodes == null) && (y_1.nodes == null)) {
+                continue;
+            } else {
+                walk1 = x_1.nodes.right;
+                prev1 = x_1.nodes;
+                walk2 = y_1.nodes.right;
+                prev2 = y_1.nodes;
+                while (walk1 != null && walk2 != null) {
+                    if (walk1.cindex() > walk2.cindex()) {
+                        z.set(walk2.rindex(), walk2.cindex(), walk2.data + new_fill);
+                        prev2 = walk2;
+                        walk2 = walk2.right;
+                    } else if (walk1.cindex() < walk2.cindex()) {
+                        z.set(walk1.rindex(), walk1.cindex(), walk1.data + new_fill);
+                        prev1 = walk1;
+                        walk1 = walk1.right;
+                    }
+                    else if (walk1.cindex() == walk2.cindex()) {
+                        double check = walk1.data + walk2.data;
+                        if (check != new_fill)
+                        {
+                            z.set(walk1.rindex(), walk2.cindex(), check);
+                        }
+                        prev1 = walk1;
+                        walk1 = walk1.right;
+                        prev2 = walk2;
+                        walk2 = walk2.right;
+                    }
                 }
             }
         }
@@ -629,15 +613,12 @@ public class SparseMatrix<T>{
     }
 
 
-    public static void main(String args[])
-    {
-        SparseMatrix <Double> x = new SparseMatrix<Double>(3,3,9.0);
-        SparseMatrix <Double> y = new SparseMatrix<Double>(3,3,9.0);
-        SparseMatrix <Double> z = x.addFast(x,y);
+    public static void main(String args[]) {
+        SparseMatrix<Double> x = new SparseMatrix<Double>(4, 3, 0.0);
+        SparseMatrix<Double> y = new SparseMatrix<Double>(4, 3, 0.0);
+        x.set(1, 0, 1.0);
+        y.set(1, 2, 2.0);
+        SparseMatrix<Double> z = x.addFast(x,y);
         System.out.println(z);
-
-
-
-
     }
 }
