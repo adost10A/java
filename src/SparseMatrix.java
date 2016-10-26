@@ -66,7 +66,6 @@ public class SparseMatrix<T> {
 
         public Y data;              // Data associated with the node
 
-        Node<Y> next;
 
         public Node(Y data) {
             this.data = data;
@@ -250,7 +249,7 @@ public class SparseMatrix<T> {
         if (rowhead.nodes == null) {
             return fillElem;
         }
-        Node<T> rownode = rowhead.nodes.right;
+        Node<T> rownode = rowhead.nodes.right; //Loop till you find it
         while (rownode.cindex() != j && rownode != null) {
             rownode = rownode.right;
             if (rownode == null) {
@@ -393,6 +392,10 @@ public class SparseMatrix<T> {
     public void setToFill(int i, int j) {
         if (i > theRows.size() || j > theCols.size()) {
             throw new IndexOutOfBoundsException("I or J was out of bounds");
+        }
+        if(get(i,j)==fillElem)
+        {
+            return;
         }
         Head<T> row = theRows.get(i);
         Head<T> col = theCols.get(j);
@@ -540,86 +543,119 @@ public class SparseMatrix<T> {
         if (x.rows() != y.rows() || x.cols() != y.cols()) {
             throw new IllegalArgumentException("The Matricies MUST be equal");
         }
-        if (x.elementCount() == 0) {
-            return x;
-        }
         double new_fill = x.getFillElem() + y.getFillElem();
         SparseMatrix<Double> z = new SparseMatrix<Double>(x.rows(), y.cols(), new_fill);
-        Head<Double> x_1, y_1;
-        Node<Double> walk1, prev1;
-        Node<Double> walk2, prev2;
-
+        Head<Double> xrow, yrow,z1;
+        Node<Double> walk1,walk2,znode;
+        Node<Double> insert;
         for (int r = 0; r < x.rows(); r++) {
-            x_1 = x.getRow(r);
-            y_1 = y.getRow(r);
             /*
-            Case 1: X IS NOT EMPTY and Y IS EMPTY
-            Case 2: X is EMPTY and Y IS NOT EMPTY
-            Case 3: Both are empty and that should be added to z
+            Access the Rows for each matrix and insert them into z with a focus on starting with walk2 (Y Nodes)
+             and following with A (X Nodes)
              */
-            if ((x_1.nodes != null) && (y_1.nodes == null)) {
-                walk1 = x_1.nodes.right;
-                prev1 = x_1.nodes;
-                while (walk1 != null) {
-                    walk1.data += z.fillElem;
-                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
-                    walk1 = walk1.right;
-                }
-            } else if ((y_1.nodes != null) && (x_1.nodes == null)) {
-                walk1 = y_1.nodes.right;
-                prev1 = y_1.nodes;
-                while (walk1 != null) {
-                    walk1.data += x.fillElem;
-                    z.set(walk1.rindex(), walk1.cindex(), walk1.data);
-                    walk1 = walk1.right;
-                }
-            } else if ((x_1.nodes == null) && (y_1.nodes == null)) {
+            xrow = x.getRow(r);
+            yrow = y.getRow(r);
+            z1 = z.getRow(r);
+            /* If the Nodes are empty just initialize them */
+            if(xrow.nodes==null) {xrow.nodes = new Node<>();}
+            if(yrow.nodes==null) {yrow.nodes = new Node<>();}
+            /* Z is empty */
+            z1.nodes = new Node<>();
+            znode = z1.nodes;
+            walk1 = xrow.nodes;
+            walk2 = yrow.nodes;
+            if(walk1.right==null && walk2.right ==null)
+            {
                 continue;
-            } else {
-                walk1 = x_1.nodes.right;
-                prev1 = x_1.nodes;
-                walk2 = y_1.nodes.right;
-                prev2 = y_1.nodes;
-                while(true)
-                {
-                    if (!(walk1 != null && walk2 != null)) break;
-                    if(walk1.cindex()==walk2.cindex())
-                    {
-                        double combined = walk1.data + walk2.data;
-                        if(combined!=new_fill)
-                        {
-                            z.set(walk1.rindex(),walk1.cindex(),combined);
-                        }
-                        walk1 = walk1.right;
-                        walk2 = walk2.right;
-                    }
+            }
+            walk1 = walk1.right;
+            walk2 = walk2.right;
+            boolean notnull1,notnull2;
+            while (true) {
 
-                    else
+                /* 4 Scenarios
+                1. W1 < W2
+                2. W1 > W2
+                3. W1 | NULL
+                4. W2 | NULL
+                5. NULL NULL BREAK from LOOP
+                 */
+
+                notnull1 = (walk1==null);
+                notnull2 = (walk2==null);
+                if((notnull1 == true) && (notnull2 == true))
+                {
+                    break;
+                }
+                if(notnull1!= true && notnull2!=true)
+                {
+                    if((walk2.cindex() < walk1.cindex())) // Y < X
                     {
-                        if(walk1!=null)
+                        insert = new Node<>(walk2.data + new_fill);
+                        insert.rowHead = z.theRows.get(r);
+                        insert.colHead = z.theCols.get(walk2.cindex());
+                        znode.right = insert;
+                        znode = znode.right;
+                        walk2 = walk2.right;
+                        z.element_count++;
+                    }
+                    else if(walk1.cindex()<walk2.cindex()) // X < Y
+                    {
+                        insert = new Node<>(walk1.data + new_fill);
+                        insert.rowHead = z.theRows.get(r);
+                        insert.colHead = z.theCols.get(walk1.cindex());
+                        znode.right = insert;
+                        znode = znode.right;
+                        walk1 = walk1.right;
+                        z.element_count++;
+                    }
+                    else if(walk1.cindex()==walk2.cindex()) //JUST MATCHING
+                    {
+                        double test = walk1.data + walk2.data;
+                        if(test!=new_fill)
                         {
-                            z.set(walk1.rindex(),walk1.cindex(),walk1.data + y.fillElem);
+                            insert = new Node<>(walk1.data + walk2.data);
+                            insert.rowHead = z.theRows.get(r);
+                            insert.colHead = z.theCols.get(walk1.cindex());
+                            znode.right = insert;
+                            znode = znode.right;
                             walk1 = walk1.right;
-                        }
-                        if(walk2!=null)
-                        {
-                            z.set(walk2.rindex(),walk2.cindex(),walk2.data + x.fillElem);
                             walk2 = walk2.right;
+                            z.element_count++;
                         }
                     }
                 }
+                else
+                {
+                    if(walk1!=null && walk2==null) //JUST MATCHING
+                    {
+                        insert = new Node<>(walk1.data + new_fill);
+                        insert.rowHead = z.theRows.get(r);
+                        insert.colHead = z.theCols.get(walk1.cindex());
+                        znode.right = insert;
+                        znode = znode.right;
+                        walk1 = walk1.right;
+                        z.element_count++;
+                    }
+                    else if(walk2!=null && walk1==null)
+                    {
+                        insert = new Node<>(walk2.data + new_fill);
+                        insert.rowHead = z.theRows.get(r);
+                        insert.colHead = z.theCols.get(walk2.cindex());
+                        znode.right = insert;
+                        znode = znode.right;
+                        walk2 = walk2.right;
+                        z.element_count++;
+                    }
+                }
+                z.theRows.set(r,z1);
             }
         }
         return z;
     }
 
 
+
     public static void main(String args[]) {
-        SparseMatrix<Double> x = new SparseMatrix<Double>(4, 3, 0.0);
-        SparseMatrix<Double> y = new SparseMatrix<Double>(4, 3, 0.0);
-        x.set(1, 0, 1.0);
-        y.set(1, 2, 2.0);
-        SparseMatrix<Double> z = x.addFast(x,y);
-        System.out.println(z);
     }
 }
